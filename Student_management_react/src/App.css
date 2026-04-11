@@ -1,0 +1,14 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+body {
+    margin: 0;
+}
+
+@reference "tailwindcss";
+
+.dashboard-card {
+    @apply p-4 border flex flex-col justify-center items-center bg-gray-100 rounded-lg h-[180px] w-full hover:scale-105 transition-all hover:shadow-md cursor-pointer border-dashed;
+}
