@@ -91,7 +91,9 @@ router.get("/marksReport", async (req, res) => {
     console.error(err);
     res.status(500).send("Server error");
   }
-});router.get("/marksReport", async (req, res) => {
+});
+
+router.get("/marksReport", async (req, res) => {
   const { batch, sectionn, semester } = req.query;
 
   const semesterInt = parseInt(semester);
@@ -147,6 +149,31 @@ router.get("/marksReport", async (req, res) => {
   }
 });
 
+// check if student submited the exam
+
+router.get("/check", async (req, res) => {
+  try {
+    const { student_id, semester, exam_number } = req.query;
+
+    const result = await pool.query(
+      `SELECT id FROM marks 
+       WHERE student_id = $1 
+       AND semester = $2 
+       AND exam_number = $3`,
+      [student_id, semester, exam_number],
+    );
+
+    if (result.rows.length > 0) {
+      return res.json({ submitted: true });
+    } else {
+      return res.json({ submitted: false });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error for check" });
+  }
+});
+
 
 // GET marks for one student
 
@@ -171,8 +198,10 @@ router.get("/:studentId", async (req, res) => {
     res.json(result.rows);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: "Server error from studentid" });
   }
 });
+
+
 
 export default router;

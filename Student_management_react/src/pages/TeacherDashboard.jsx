@@ -17,6 +17,8 @@ import TakeExam from "@/dashboard/teacher/components/TakeExam";
 import GiveMarks from "@/dashboard/teacher/components/GiveMarks";
 import RevewAttendence from "@/dashboard/teacher/components/RevewAttendence";
 import MarksReport from "@/dashboard/teacher/components/MarksReport";
+import ExamList from "@/dashboard/teacher/components/ExamList";
+
 
 function TeacherDashboard() {
   const [showForm, setShowForm] = useState(false);
@@ -61,6 +63,7 @@ function TeacherDashboard() {
          {activePage === "attenedence" && <Attendence />}
          {activePage === "reviewAttendence" && <RevewAttendence />}
          {activePage === "marksReport" && <MarksReport />}
+         {activePage === "examList" && <ExamList/>}
        </div>
      </div>
    );

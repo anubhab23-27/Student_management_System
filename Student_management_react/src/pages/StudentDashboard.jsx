@@ -1,3 +1,5 @@
+import GiveExam from "@/dashboard/student/components/GiveExam";
+import ExamPortal from "@/dashboard/student/components/GiveExam";
 import SideNav from "@/dashboard/student/components/SideNav";
 import ViewAttendence from "@/dashboard/student/components/ViewAttendence";
 import ViewMarks from "@/dashboard/student/components/ViewMarks";
@@ -20,6 +22,7 @@ function StudentDashboard({children}) {
       <div className="flex-1 p-4 overflow-x-auto">
         {activePage === "viewAttendence" && <ViewAttendence />}
         {activePage === "viewMarks" && <ViewMarks />}
+        {activePage === "giveExam" && <GiveExam />}
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import pool from "./db.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import attendanceRoutes from "./routes/attendance.js";
 import marksRoutes from "./routes/marks.js";
+import examRoutes from "./routes/exam.js";
 
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use("/api/students", studentRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/marks", marksRoutes);
+app.use("/api/exams", examRoutes);
 
 // test route
 app.get("/", (req, res) => {
@@ -31,7 +33,7 @@ app.get("/test-db", async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
+app.listen(5000, "0.0.0.0", () => {
   console.log("Server running on port 5000");
 });
 

@@ -73,4 +73,14 @@ export const getStudentMarks = (studentId) => {
 };
 
 
+export const createExam = (data) => api.post("/exams", data);
+export const getExams = () => api.get("/exams");
+export const getExamById = (id) => api.get(`/exams/${id}`);
+
+
+
+export const getStudentExams = (batch, sectionn) => {
+  return api.get(`/exams/student/${batch}/${sectionn}`);
+};
+
 export default api;

@@ -12,3 +12,10 @@ body {
 .dashboard-card {
     @apply p-4 border flex flex-col justify-center items-center bg-gray-100 rounded-lg h-[180px] w-full hover:scale-105 transition-all hover:shadow-md cursor-pointer border-dashed;
 }
+
+
+.exam-container * {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}

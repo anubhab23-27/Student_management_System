@@ -1,4 +1,4 @@
-import { FileChartLine, GraduationCap, Hand, History, PencilRuler, Percent } from 'lucide-react';
+import { FileChartLine, GraduationCap, Hand, History, List, PencilRuler, Percent } from 'lucide-react';
 import React from 'react'
 
 function SideNav({ setActivePage, activePage }) {
@@ -30,6 +30,13 @@ function SideNav({ setActivePage, activePage }) {
           ${activePage === "marksReport" ? "bg-blue-600" : "hover:bg-gray-700"}`}
         >
           <Percent /> Student Marks
+        </button>
+        <button
+          onClick={() => setActivePage("examList")}
+          className={`text-left px-4 py-2 rounded-lg transition flex gap-2
+          ${activePage === "examList" ? "bg-blue-600" : "hover:bg-gray-700"}`}
+        >
+          <List /> Upcoming Exams
         </button>
       </div>
 
