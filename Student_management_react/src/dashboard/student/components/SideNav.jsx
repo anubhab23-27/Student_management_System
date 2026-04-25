@@ -1,57 +1,112 @@
-import { History, PencilRuler, Percent } from 'lucide-react';
-import React from 'react'
+import { History, PencilRuler, Percent, Menu, X } from "lucide-react";
+import React, { useState } from "react";
 
 function SideNav({ setActivePage, activePage }) {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const [isOpen, setIsOpen] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user")) || {
+    name: "John Doe",
+    rollnumber: "CS-101",
+    batch: "2024",
+    sectionn: "A",
+  };
+
+  const navItems = [
+    {
+      id: "viewAttendence",
+      label: "View Attendance",
+      icon: <History size={18} />,
+    },
+    { id: "viewMarks", label: "Marks Report", icon: <Percent size={18} /> },
+    { id: "giveExam", label: "Give Exam", icon: <PencilRuler size={18} /> },
+  ];
+
+  const handleNav = (page) => {
+    setActivePage(page);
+    setIsOpen(false); // close drawer on mobile after selecting
+  };
+
   return (
-    <div className="h-[calc(100vh-52px)] bg-gray-900 text-white p-5 flex flex-col overflow-y-auto">
-      {/* Title */}
-      <h1 className="text-2xl font-bold mb-8">Student Panel</h1>
+    <>
+      {/* ── Mobile hamburger button (hidden on md+) ── */}
+      <button
+        onClick={() => setIsOpen(true)}
+        className="fixed top-1.5 left-1.5 z-50 md:hidden p-2 rounded-lg "
+        aria-label="Open menu"
+      >
+        <Menu size={22} />
+      </button>
 
-      {/* Menu */}
-      <div className="flex flex-col gap-3">
-        <button
-          onClick={() => setActivePage("viewAttendence")}
-          className={`text-left px-4 py-2 rounded-lg transition flex gap-2
-          ${activePage === "viewAttendence" ? "bg-blue-600" : "hover:bg-gray-700"}`}
-        >
-          <History />
-          View Attendence
-        </button>
+      {/* ── Backdrop overlay (mobile only) ── */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
 
-        <button
-          onClick={() => setActivePage("viewMarks")}
-          className={`text-left px-4 py-2 rounded-lg transition flex gap-2
-          ${activePage === "viewMarks" ? "bg-blue-600" : "hover:bg-gray-700"}`}
-        >
-          <Percent />
-          Marks Report
-        </button>
+      {/* ── Sidebar ── */}
+      <aside
+        className={`
+          fixed top-0 left-0 z-50 h-full w-64 bg-gray-900 text-white p-5
+          flex flex-col overflow-y-auto shadow-2xl
+          transition-transform duration-300 ease-in-out
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
+          md:static md:translate-x-0 md:h-[calc(100vh-52px)] md:shadow-none
+        `}
+      >
+        {/* Header row */}
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-2xl font-bold">Student Panel</h1>
+          {/* Close button — only visible on mobile */}
+          <button
+            onClick={() => setIsOpen(false)}
+            className="md:hidden text-gray-400 hover:text-white transition"
+            aria-label="Close menu"
+          >
+            <X size={22} />
+          </button>
+        </div>
 
-        <button
-          onClick={() => setActivePage("giveExam")}
-          className={`text-left px-4 py-2 rounded-lg transition flex gap-2
-          ${activePage === "giveExam" ? "bg-blue-600" : "hover:bg-gray-700"}`}
-        >
-          <PencilRuler />
-          Give Exam
-        </button>
-      </div>
+        {/* Nav items */}
+        <nav className="flex flex-col gap-3">
+          {navItems.map(({ id, label, icon }) => (
+            <button
+              key={id}
+              onClick={() => handleNav(id)}
+              className={`text-left px-4 py-2.5 rounded-lg transition-colors flex items-center gap-3
+                ${
+                  activePage === id
+                    ? "bg-blue-600 text-white"
+                    : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                }`}
+            >
+              {icon}
+              <span className="text-sm font-medium">{label}</span>
+            </button>
+          ))}
+        </nav>
 
-      {/* Footer */}
-      <div className="mt-auto text-gray-300 pt-4 border-t border-gray-700">
-        <p>
-          <b>Name:</b> {user.name}
-        </p>
-        <p>
-          <b>Roll Number:</b> {user.rollnumber}
-        </p>
-        <p>
-          <b>Batch:</b> {user.batch}
-          <b className="ml-4">Section:</b> {user.sectionn}
-        </p>
-      </div>
-    </div>
+        {/* Footer */}
+        <div className="mt-auto text-gray-300 pt-4 border-t border-gray-700 text-sm space-y-1">
+          <p>
+            <span className="text-gray-400 font-semibold">Name:</span>{" "}
+            {user.name}
+          </p>
+          <p>
+            <span className="text-gray-400 font-semibold">Roll No:</span>{" "}
+            {user.rollnumber}
+          </p>
+          <p>
+            <span className="text-gray-400 font-semibold">Batch:</span>{" "}
+            {user.batch}
+            <span className="ml-3 text-gray-400 font-semibold">
+              Section:
+            </span>{" "}
+            {user.sectionn}
+          </p>
+        </div>
+      </aside>
+    </>
   );
 }
 

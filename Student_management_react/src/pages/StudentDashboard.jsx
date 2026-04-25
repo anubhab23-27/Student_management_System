@@ -1,22 +1,16 @@
 import GiveExam from "@/dashboard/student/components/GiveExam";
-import ExamPortal from "@/dashboard/student/components/GiveExam";
 import SideNav from "@/dashboard/student/components/SideNav";
 import ViewAttendence from "@/dashboard/student/components/ViewAttendence";
 import ViewMarks from "@/dashboard/student/components/ViewMarks";
-import AddStudent from "@/dashboard/teacher/components/AddStudent";
-import ViewStudentDetails from "@/dashboard/teacher/components/ViewStudentDetails";
 import React, { useState } from "react";
 
-function StudentDashboard({children}) {
-  const user = JSON.parse(localStorage.getItem("user"));
+function StudentDashboard() {
   const [activePage, setActivePage] = useState("viewAttendence");
 
   return (
-    <div className="flex ">
-      {/* Sidebar */}
-      <div className="w-[270px]  hidden md:block">
-        <SideNav setActivePage={setActivePage} />
-      </div>
+    <div className="flex">
+      {/* Sidebar — handles its own mobile/desktop visibility internally */}
+      <SideNav setActivePage={setActivePage} activePage={activePage} />
 
       {/* Dynamic Content */}
       <div className="flex-1 p-4 overflow-x-auto">

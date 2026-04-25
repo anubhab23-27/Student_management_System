@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { GraduationCap, User, Users } from "lucide-react";
+import { loginUser } from "../../../service/GlobalApi";
 
 function SignInPage() {
   const { role } = useParams();
@@ -23,22 +24,16 @@ function SignInPage() {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          role,
-          rollNumber: form.rollNumber,
-          email: form.email,
-          password: form.password,
-        }),
+      const res = await loginUser({
+        role,
+        rollNumber: form.rollNumber,
+        email: form.email,
+        password: form.password,
       });
 
-      const data = await res.json();
+      const data = res.data; // axios uses .data
 
-      if (res.ok) {
+      if (res.status === 200) {
         localStorage.setItem("user", JSON.stringify(data.user));
         localStorage.setItem("role", role);
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "http://192.168.1.6:5000/api";
 
 // create axios instance
 const api = axios.create({
@@ -8,6 +8,11 @@ const api = axios.create({
 });
 
 // ================= STUDENT APIs =================
+
+export const loginUser = (data) => {
+  return api.post("/auth/login", data);
+};
+
 
 // GET all students
 export const getStudents = () => api.get("/students");
@@ -81,6 +86,11 @@ export const getExamById = (id) => api.get(`/exams/${id}`);
 
 export const getStudentExams = (batch, sectionn) => {
   return api.get(`/exams/student/${batch}/${sectionn}`);
+};
+
+
+export const submitMarks = (data) => {
+  return api.post("/marks", data);
 };
 
 export default api;

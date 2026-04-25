@@ -7,9 +7,7 @@ import moment from "moment";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -25,7 +23,7 @@ import {
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
+import { AllCommunityModule } from "ag-grid-community";
 const modules = [AllCommunityModule];
 
 function ViewMarks() {
@@ -38,10 +36,8 @@ function ViewMarks() {
   const [selectedSemester, setSelectedSemester] = useState("1");
   const semesters = [...new Set(marks.map((m) => m.semester))];
 
-  // ✅ STEP 1 — get studentId
   useEffect(() => {
     if (!rollnumber) return;
-
     const fetchStudentId = async () => {
       try {
         const res = await getStudentByRoll(rollnumber);
@@ -50,14 +46,11 @@ function ViewMarks() {
         console.error(err);
       }
     };
-
     fetchStudentId();
   }, [rollnumber]);
 
-  // ✅ STEP 2 — get marks using studentId
   useEffect(() => {
     if (!studentId) return;
-
     const fetchMarks = async () => {
       try {
         const res = await getStudentMarks(studentId);
@@ -69,56 +62,41 @@ function ViewMarks() {
         setLoading(false);
       }
     };
-
     fetchMarks();
   }, [studentId]);
 
   if (loading) return <div>Loading...</div>;
+
   const filteredMarks =
     selectedSemester === "all"
       ? marks
       : marks.filter((m) => String(m.semester) === selectedSemester);
+
   const totalMarks = filteredMarks.reduce(
     (sum, m) => sum + Number(m.max_marks),
     0,
   );
-
   const obtainedMarks = filteredMarks.reduce(
     (sum, m) => sum + Number(m.marks_obtained),
     0,
   );
-
   const overallPercent =
     totalMarks > 0 ? ((obtainedMarks / totalMarks) * 100).toFixed(2) : 0;
 
   const columnDefs = [
-    { headerName: "Semester", field: "semester", flex: 1 },
-
+    { headerName: "Sem", field: "semester", flex: 1 },
     { headerName: "Exam", field: "exam_number", flex: 1 },
-
     {
       headerName: "Date",
       field: "exam_date",
-      flex: 1,
-      valueFormatter: (params) => {
-        return new Date(params.value).toLocaleDateString("en-GB");
-      },
+      ...(window.innerWidth < 640 ? { width: 120 } : { flex: 1 }),
+      valueFormatter: (params) =>
+        new Date(params.value).toLocaleDateString("en-GB"),
     },
-
+    { headerName: "Max", field: "max_marks", flex: 1 },
+    { headerName: "Marks", field: "marks_obtained", flex: 1 },
     {
-      headerName: "Max",
-      field: "max_marks",
-      flex: 1,
-    },
-
-    {
-      headerName: "Marks",
-      field: "marks_obtained",
-      flex: 1,
-    },
-
-    {
-      headerName: "Percentage %",
+      headerName: "%",
       flex: 1,
       valueGetter: (params) => {
         const obtained = Number(params.data.marks_obtained);
@@ -137,9 +115,8 @@ function ViewMarks() {
   const chartData = marks
     .map((m, index) => {
       const percent = (Number(m.marks_obtained) / Number(m.max_marks)) * 100;
-
       return {
-        id: index, // ✅ unique key
+        id: index,
         rawDate: new Date(m.exam_date),
         date: moment(m.exam_date).format("DD MMM"),
         fullLabel: `${moment(m.exam_date).format("DD MMM")} (T${m.exam_number})`,
@@ -151,28 +128,19 @@ function ViewMarks() {
     .sort((a, b) => a.rawDate - b.rawDate);
 
   return (
-    <div className="px-4 ">
-      <div className="flex justify-between mb-6">
+    <div className="px-3 sm:px-4">
+      {/* ── Header row: stacks on mobile, side-by-side on sm+ ── */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6">
         <div>
           <h2 className="text-xl font-bold my-4">Semester Marks</h2>
-
           <Select
             defaultValue=""
             onValueChange={(value) => setSelectedSemester(value)}
             required
           >
-            <SelectTrigger id="semester">
+            <SelectTrigger id="semester" className="w-40">
               <SelectValue placeholder="Semester" />
             </SelectTrigger>
-            {/* <SelectContent>
-          <SelectGroup>
-            <SelectItem value="1">1</SelectItem>
-            <SelectItem value="2">2</SelectItem>
-            <SelectItem value="3">3</SelectItem>
-            <SelectItem value="4">4</SelectItem>
-            
-          </SelectGroup>
-        </SelectContent> */}
             <SelectContent>
               {semesters.map((sem) => (
                 <SelectItem key={sem} value={String(sem)}>
@@ -182,34 +150,33 @@ function ViewMarks() {
             </SelectContent>
           </Select>
         </div>
-        {/* Summary Cards */}
 
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="p-4 rounded-lg bg-gray-100 text-center">
-            <div className="text-sm text-gray-600">Total Marks</div>
-            <div className="text-xl font-bold">{totalMarks}</div>
+        {/* Summary Cards — full width on mobile, auto on sm+ */}
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 w-full sm:w-auto">
+          <div className="p-3 sm:p-4 rounded-lg bg-gray-100 text-center">
+            <div className="text-xs sm:text-sm text-gray-600">Total</div>
+            <div className="text-lg sm:text-xl font-bold">{totalMarks}</div>
           </div>
-          <div className="p-4 rounded-lg bg-blue-100 text-center">
-            <div className="text-sm text-blue-700">Obtained</div>
-            <div className="text-xl font-bold text-blue-800">
+          <div className="p-3 sm:p-4 rounded-lg bg-blue-100 text-center">
+            <div className="text-xs sm:text-sm text-blue-700">Obtained</div>
+            <div className="text-lg sm:text-xl font-bold text-blue-800">
               {obtainedMarks}
             </div>
           </div>
           <div
-            className={`p-4 rounded-lg text-center ${
+            className={`p-3 sm:p-4 rounded-lg text-center ${
               overallPercent < 40 ? "bg-red-100" : "bg-green-100"
             }`}
           >
             <div
-              className={`text-sm ${
+              className={`text-xs sm:text-sm ${
                 overallPercent < 40 ? "text-red-700" : "text-green-700"
               }`}
             >
               Overall %
             </div>
-
             <div
-              className={`text-xl font-bold ${
+              className={`text-lg sm:text-xl font-bold ${
                 overallPercent < 40 ? "text-red-800" : "text-green-800"
               }`}
             >
@@ -218,60 +185,84 @@ function ViewMarks() {
           </div>
         </div>
       </div>
+
+      {/* AG Grid */}
       {filteredMarks.length === 0 ? (
         <p>No data</p>
       ) : (
-        <>
+        <div className="overflow-x-auto w-full">
           <AgGridProvider modules={modules}>
             <div
               className="ag-theme-alpine"
-              style={{ height: 170, width: "100%" }}
+              style={{ height: 170, minWidth: 520, width: "100%" }}
             >
-              <AgGridReact rowData={filteredMarks} columnDefs={columnDefs} />
+              <AgGridReact
+                rowData={filteredMarks}
+                columnDefs={columnDefs}
+                suppressSizeColumnsToFit={true}
+              />
             </div>
           </AgGridProvider>
-        </>
+        </div>
       )}
-      <div className="w-full h-69 mt-6 bg-white p-7 rounded-lg shadow">
+
+      {/* Chart — taller on mobile so it's readable */}
+      {/* Chart */}
+      <div className="w-full mt-6 bg-white p-4 sm:p-7 rounded-lg shadow">
         <h3 className="text-lg font-semibold mb-2">Performance Trend</h3>
 
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-
-            <XAxis
-              dataKey="rawDate"
-              tickFormatter={(val) => moment(val).format("DD MMM YYYY")}
-            />
-            <YAxis domain={[0, 100]} />
-
-            <Tooltip
-              content={({ active, payload }) => {
-                if (active && payload && payload.length) {
-                  const data = payload[0].payload;
-
-                  return (
-                    <div className="bg-white p-3 border rounded shadow text-sm">
-                      <p className="font-semibold">{data.date}</p>
-                      <p className="text-gray-600">
-                        Semester {data.semester} | Test {data.exam}
-                      </p>
-                      <p className="text-blue-600 font-bold">{data.percent}%</p>
-                    </div>
-                  );
-                }
-                return null;
-              }}
-            />
-
-            <Line
-              type="monotone"
-              dataKey="percent"
-              stroke="#3b82f6"
-              strokeWidth={3}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+        {/* Scrollable wrapper */}
+        <div className="overflow-x-auto">
+          <div
+            style={{
+              height: 220,
+              minWidth: "100%",
+              width: Math.max(chartData.length * 80, 300), // 80px per point, min 300px
+            }}
+          >
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="rawDate"
+                  tickFormatter={(val) =>
+                    window.innerWidth < 640
+                      ? moment(val).format("DD/MM")
+                      : moment(val).format("DD MMM YYYY")
+                  }
+                  tick={{ fontSize: 11 }}
+                />
+                <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} width={32} />
+                <Tooltip
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0].payload;
+                      return (
+                        <div className="bg-white p-3 border rounded shadow text-sm">
+                          <p className="font-semibold">{data.date}</p>
+                          <p className="text-gray-600">
+                            Sem {data.semester} | Test {data.exam}
+                          </p>
+                          <p className="text-blue-600 font-bold">
+                            {data.percent}%
+                          </p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="percent"
+                  stroke="#3b82f6"
+                  strokeWidth={3}
+                  dot={{ r: 3 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
     </div>
   );
