@@ -5,6 +5,7 @@ import studentRoutes from "./routes/studentRoutes.js";
 import attendanceRoutes from "./routes/attendance.js";
 import marksRoutes from "./routes/marks.js";
 import examRoutes from "./routes/exam.js";
+import noticeRoutes from "./routes/notice.js";
 
 
 const app = express();
@@ -16,6 +17,7 @@ app.use("/api/students", studentRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/marks", marksRoutes);
 app.use("/api/exams", examRoutes);
+app.use("/api/notices", noticeRoutes);
 
 // test route
 app.get("/", (req, res) => {

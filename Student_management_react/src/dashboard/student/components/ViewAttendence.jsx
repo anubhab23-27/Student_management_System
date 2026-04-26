@@ -94,14 +94,12 @@ function ViewAttendence() {
   };
 
   return (
-    <div className="px-3 sm:px-4">
+    <div className="px-2 sm:px-2">
       {/* ── Header: stacks vertically on mobile, side-by-side on sm+ ── */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mt-4 mb-2">
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mt-2 mb-2">
         {/* Title + Month Picker */}
         <div className="flex flex-col gap-2">
-          <h2 className="text-lg sm:text-xl font-bold">
-            Monthly Attendance Report
-          </h2>
+          <h2 className="text-2xl  font-bold">Monthly Attendance Report</h2>
           <input
             type="month"
             value={month}

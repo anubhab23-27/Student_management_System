@@ -18,6 +18,7 @@ import GiveMarks from "@/dashboard/teacher/components/GiveMarks";
 import RevewAttendence from "@/dashboard/teacher/components/RevewAttendence";
 import MarksReport from "@/dashboard/teacher/components/MarksReport";
 import ExamList from "@/dashboard/teacher/components/ExamList";
+import Notice from "@/dashboard/teacher/components/Notice";
 
 
 function TeacherDashboard() {
@@ -64,6 +65,7 @@ function TeacherDashboard() {
          {activePage === "reviewAttendence" && <RevewAttendence />}
          {activePage === "marksReport" && <MarksReport />}
          {activePage === "examList" && <ExamList/>}
+         {activePage === "notice" && <Notice/>}
        </div>
      </div>
    );

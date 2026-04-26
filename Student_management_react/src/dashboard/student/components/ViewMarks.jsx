@@ -128,11 +128,11 @@ function ViewMarks() {
     .sort((a, b) => a.rawDate - b.rawDate);
 
   return (
-    <div className="px-3 sm:px-4">
+    <div className="px-2 sm:px-2 pb-20 sm:pb-0">
       {/* ── Header row: stacks on mobile, side-by-side on sm+ ── */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6">
         <div>
-          <h2 className="text-xl font-bold my-4">Semester Marks</h2>
+          <h2 className="text-2xl font-bold my-2">Semester Marks</h2>
           <Select
             defaultValue=""
             onValueChange={(value) => setSelectedSemester(value)}
@@ -208,7 +208,7 @@ function ViewMarks() {
 
       {/* Chart — taller on mobile so it's readable */}
       {/* Chart */}
-      <div className="w-full mt-6 bg-white p-4 sm:p-7 rounded-lg shadow">
+      <div className="w-full mt-3 bg-white p-4 sm:p-7 rounded-lg shadow">
         <h3 className="text-lg font-semibold mb-2">Performance Trend</h3>
 
         {/* Scrollable wrapper */}

@@ -17,7 +17,10 @@ function AppContent() {
   const location = useLocation();
 
   // Hide Navbar on exam portal route
-  const hideNavbar = location.pathname.startsWith("/student/exam/");
+const hideNavbar =
+  location.pathname.startsWith("/student/exam/") ||
+  location.pathname === "/home";
+  
 
   return (
     <>

@@ -1,23 +1,22 @@
 import { History, PencilRuler, Percent, Menu, X, ClipboardList } from "lucide-react";
 import React, { useState } from "react";
 
-function SideNav({ setActivePage, activePage }) {
+function ParentSideNav({ setActivePage, activePage }) {
   const [isOpen, setIsOpen] = useState(false);
   const user = JSON.parse(localStorage.getItem("user")) 
   
   const navItems = [
-    {
-      id: "studentNotice",
-      label: "Notice Board",
-      icon: <ClipboardList size={18} />,
-    },
     {
       id: "viewAttendence",
       label: "View Attendance",
       icon: <History size={18} />,
     },
     { id: "viewMarks", label: "Marks Report", icon: <Percent size={18} /> },
-    { id: "giveExam", label: "Give Exam", icon: <PencilRuler size={18} /> },
+    {
+      id: "parentNotice",
+      label: "Notice Board",
+      icon: <ClipboardList size={18} />,
+    },
   ];
 
   const handleNav = (page) => {
@@ -146,4 +145,4 @@ function SideNav({ setActivePage, activePage }) {
   );
 }
 
-export default SideNav;
+export default ParentSideNav;
